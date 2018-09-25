@@ -1,4 +1,4 @@
-#Project 1 for AI - Deven Damiano - dad152@zips.uakron.edu
+#Project 1 for AI - Deven Damiano - dad152@zips.uakron.edu - Nicholas Horvath - nch16@zips.uakron.edu    
 
 import sys
 from sklearn import tree
