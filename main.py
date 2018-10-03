@@ -7,9 +7,10 @@ import graphviz
 from sklearn import tree
 from sklearn import datasets
 from sklearn import svm
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
-import pickle
 
 def learn_tree():
     
@@ -67,6 +68,22 @@ def learn_tree():
             joblib.dump(c, 'tree.joblib')
         
             print("Tree saved as 'tree.joblib'")
+        
+            #running = False
+        
+            # Past here is for testing data function
+            
+            #accuracy
+            
+            y_pred = c.predict(X_test)
+    
+            score = accuracy_score(y_test, y_pred) * 100
+    
+            print("Accuracy: ", score)
+            
+            #decision matrix
+        
+            print(confusion_matrix(y_test, y_pred))
     
         elif(choice == "2"):
             
