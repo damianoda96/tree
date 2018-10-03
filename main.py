@@ -7,79 +7,95 @@ import graphviz
 from sklearn import tree
 from sklearn import datasets
 from sklearn import svm
-from sklearn.externals import joblib
 from sklearn.model_selection import train_test_split
+from sklearn.externals import joblib
+import pickle
 
 def learn_tree():
     
-    #Here is an example based off of a small dataset
+    running = True
     
-    features = np.array([
-        [29,23,72],
-        [31,25,77],
-        [31,27,82],
-        [29,29,89],
-        [31,31,72],
-        [29,33,77],
-    ])
-   
-    labels = np.array([
-        [0],
-        [1],
-        [1],
-        [0],
-        [1],
-        [0],
-    ])
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        features,
-        labels,
-        test_size=0.3,
-        random_state=42,
-    )
-
-    clf = tree.DecisionTreeClassifier()
-    clf.fit(X=X_train,y=y_train)
-    clf.feature_importances_ # [1., 0., 0.]
-    clf.score(X=X_test, y=y_test) #1.0
-
-
-    dot_data = tree.export_graphviz(
-
-        clf,
-        out_file=None,
-        feature_names=["minutes", "age", "height"],
-        class_names=["score_equal_to_or_over_20", "scored_under_20"],
-        filled=True,
-        rounded=True,
-        special_characters=True
-    )
-
-    graph = graphviz.Source(dot_data)
-
-    graph.render('tree.gv', view=True)
+    # Additional testing is needed here, trying to cover multiple input methods, user can input a full data table, or individual attributes
     
-
-    #print("Learning a decision tree and saving the tree")
-    
-    while(True):
-
-        fileName = input("Please enter file names of attributes and training examples, press q to quit: ")
-
-        if(input == "q"):
-            
-            break
+    while(running):
         
+        print("--------------SUBMENU 1--------------")
+        print("1: Import a complete dataset\n2: Individual attributes or training sets\n3: Exit")
+        choice = input("Enter 1,2, or 3: ")
+    
+        if(choice == "1"):
+        
+            file_name = input("Enter the filename of the dataset: ")
+            data = pd.read_csv(file_name)
+                
+            attribute_list = data.columns
+            
+            ## EMPTY THIS BEFORE SUBMITION
+            training_list = ["danceability", "loudness", "valence", "energy", "instrumentalness", "acousticness", "key", "speechiness", "duration_ms"]
+
+            train, test = train_test_split(data, test_size = .15)
+            
+            c = tree.DecisionTreeClassifier(min_samples_split=100)
+
+            # UNCOMMENT BEFORE SUBMITION
+            '''while(True):
+                    
+                attribute = input("Please input the names of the attributes you would like to train with, q to quit: ")
+
+                if (attribute in attribute_list and attribute not in training_list):
+                    training_list.append(attribute)
+                            
+                elif(attribute == "q"):
+                    break
+                                    
+                else:
+                    print("This is not an attribut of the inputed")
+                    continue'''
+            
+            # FOR NOW, USE PRESET
+                        
+            X_train = train[training_list]
+            y_train = train["target"]
+                
+            X_test = test[training_list]
+            y_test = test["target"]
+            
+            dt = c.fit(X_train, y_train)
+            
+            #write tree to file
+            
+            joblib.dump(c, 'tree.joblib')
+        
+            print("Tree saved as 'tree.joblib'")
+    
+        elif(choice == "2"):
+            
+            # Input individual attributes to build a tree from
+            
+            while(True):
+
+                attribute = input("Please input the names of the attributes you would like to train with, q to quit: ")
+
+                if (attribute in attribute_list and attribute not in training_list):
+                    training_list.append(attribute)
+    
+                elif(attribute == "q"):
+                    break
+
+                else:
+                    print("This is not an attribut of the inputed")
+
+        elif(choice == "3" or choice == "q"):
+            break
+
         else:
-
-            #open file here
-            #create tree
-            #export tree to file
-
             continue
 
 def test_accuracy():
+    
+    tree = joblib.load('tree.joblib')
+    
+    print("-------------SUBMENU 2---------------")
 
     fileName = input("Please enter the file name of testing data: ")
 
@@ -88,6 +104,10 @@ def test_accuracy():
     #output confusion matrix
 
 def apply_tree():
+    
+    tree = joblib.load('tree.joblib')
+    
+    print("-------------SUBMENU 3---------------")
     
     while(True):
 
@@ -104,8 +124,12 @@ def apply_tree():
 
 
 def load_model():
+    
+    print("-------------SUBMENU 4---------------")
 
     fileName = input("Please enter the file name for the tree: ")
+
+    tree = joblib.load(input)
 
     #test tree with new cases
 
@@ -119,7 +143,7 @@ def select_option(choice):
         apply_tree()
     elif(choice == "4"):
         load_model()
-    elif(choice == "5"):
+    elif(choice == "5" or choice == "q"):
         print("Aborting..")
         exit()
     else:
@@ -130,7 +154,7 @@ running = True
 
 while(running):
 
-    print("MENU:")
+    print("----------------MAIN MENU------------------")
     print("1. Learn a decision tree and save the tree")
     print("2. Testing accuracy of the decision tree")
     print("3. Applying the decision tree to new cases")
