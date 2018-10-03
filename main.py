@@ -10,13 +10,6 @@ from sklearn import svm
 from sklearn.externals import joblib
 from sklearn.model_selection import train_test_split
 
-
-#X = [[0, 0], [1, 1]]
-#Y = [0, 1]
-#clf = tree.DecisionTreeClassifier()
-#clf = clf.fit(X, Y)
-#clf.predict([[2., 2.]])
-
 def learn_tree():
     
     #Here is an example based off of a small dataset
@@ -66,48 +59,55 @@ def learn_tree():
     graph = graphviz.Source(dot_data)
 
     graph.render('tree.gv', view=True)
-
-
-
-
-
-    #print(digits.data)
-    #print(digits.target)
-
-
-                
+    
 
     #print("Learning a decision tree and saving the tree")
     
-    #while(True):
+    while(True):
 
-    #    fileName = input("Please enter file names of attributes and training examples, press q to quit: ")
+        fileName = input("Please enter file names of attributes and training examples, press q to quit: ")
 
-    #   if(input == "q"):
+        if(input == "q"):
+            
+            break
         
-        #        break
-
-        #   else:
+        else:
 
             #open file here
+            #create tree
+            #export tree to file
 
-#     continue
-
-
-
-
+            continue
 
 def test_accuracy():
 
-    print("Testing accuracy of the decision tree")
+    fileName = input("Please enter the file name of testing data: ")
+
+    #validate and open file
+    #test data with tree
+    #output confusion matrix
 
 def apply_tree():
+    
+    while(True):
 
-    print("Applying the decision tree to new cases")
+        attribute = input("Please enter values of new condition attributes, enter 'q' to quit: ")
+
+        if(input == "q"):
+
+            break
+
+        else:
+            
+            #add new cases to dataset
+            continue
+
 
 def load_model():
 
-    print("Loading a tree model and apply to new cases interactively as in menu 3")
+    fileName = input("Please enter the file name for the tree: ")
+
+    #test tree with new cases
 
 def select_option(choice):
     
