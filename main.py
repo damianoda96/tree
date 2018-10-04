@@ -89,18 +89,43 @@ def learn_tree():
             
             # Input individual attributes to build a tree from
             
+            datasets = []
+            
             while(True):
 
-                attribute = input("Please input the names of the attributes you would like to train with, q to quit: ")
-
-                if (attribute in attribute_list and attribute not in training_list):
-                    training_list.append(attribute)
-    
-                elif(attribute == "q"):
+                file_name = input("Please input the names of the attributes you would like to train with, q to quit: ")
+                
+                if(file_name == "q"):
                     break
-
                 else:
-                    print("This is not an attribut of the inputed")
+                    
+                    try:
+                        data = pd.read_csv(file_name, sep=",", index_col=0)
+                        datasets.append(data)
+                    except:
+                        print("File not found...")
+                    
+                    
+        
+            if(datasets):
+                
+                result = pd.concat(datasets, axis = 1, sort = False)
+                
+                print(result.columns)
+                    
+            else:
+            
+                print("Nothing was entered")
+                
+
+            '''if (attribute in attribute_list and attribute not in training_list):
+                training_list.append(attribute)
+                
+            elif(attribute == "q"):
+                break
+
+            else:
+                print("This is not an attribut of the inputed")'''
 
         elif(choice == "3" or choice == "q"):
             break
