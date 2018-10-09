@@ -104,28 +104,32 @@ def learn_tree():
                         datasets.append(data)
                     except:
                         print("File not found...")
-                    
-                    
         
             if(datasets):
                 
                 result = pd.concat(datasets, axis = 1, sort = False)
-                
-                print(result.columns)
+            
+                train, test = train_test_split(data, test_size = 0)
+            
+                c = tree.DecisionTreeClassifier(min_samples_split=100)
+            
+                training_list = data.columns
+            
+                X_train = train[training_list]
+                y_train = train["target"]
+
+                #X_test = test[training_list]
+                #y_test = test["target"]
+
+                dt = c.fit(X_train, y_train)
+            
+                joblib.dump(c, 'tree.joblib')
+    
+                print("Tree saved as 'tree.joblib'")
                     
             else:
             
                 print("Nothing was entered")
-                
-
-            '''if (attribute in attribute_list and attribute not in training_list):
-                training_list.append(attribute)
-                
-            elif(attribute == "q"):
-                break
-
-            else:
-                print("This is not an attribut of the inputed")'''
 
         elif(choice == "3" or choice == "q"):
             break
@@ -139,11 +143,34 @@ def test_accuracy():
     
     print("-------------SUBMENU 2---------------")
 
-    fileName = input("Please enter the file name of testing data: ")
+    file_name = input("Please enter the file name of testing data: ")
 
-    #validate and open file
-    #test data with tree
-    #output confusion matrix
+    try:
+        data = pd.read_csv(file_name, sep=",", index_col=0)
+    except:
+        print("File not found...")
+        return
+
+    tree = joblib.load('tree.joblib')
+
+    train, test = train_test_split(data, test_size = .50)
+
+    testing_list = data.columns
+
+    X_test = test[training_list]
+    y_test = test["target"]
+
+    #accuracy
+
+    y_pred = tree.predict(X_test)
+    
+    score = accuracy_score(y_test, y_pred) * 100
+    
+    print("Accuracy: ", score)
+
+    #confusion matrix
+        
+    print(confusion_matrix(y_test, y_pred))
 
 def apply_tree():
     
@@ -152,8 +179,8 @@ def apply_tree():
     print("-------------SUBMENU 3---------------")
     
     while(True):
-
-        attribute = input("Please enter values of new condition attributes, enter 'q' to quit: ")
+        
+        attribute = input("Please enter the label which you would like to add new cases to test with, enter 'q' to quit: ")
 
         if(input == "q"):
 
@@ -161,19 +188,34 @@ def apply_tree():
 
         else:
             
-            #add new cases to dataset
-            continue
+            
+            #verify and choose pick specific column
+            
+            while(True):
+                
+                attribute = input("Please enter new values for 'column name', q to quit: ")
+            
+                if(input == "q"):
+            
+                    break
+        
+                else:
+        
+                    #add values to column
 
+                    continue
+
+    #once finished, save csv file with new additions
 
 def load_model():
     
     print("-------------SUBMENU 4---------------")
 
-    fileName = input("Please enter the file name for the tree: ")
-
-    tree = joblib.load(input)
+    tree = joblib.load('tree.joblib')
 
     #test tree with new cases
+
+    #output accuracy and confusion matrix
 
 def select_option(choice):
     
