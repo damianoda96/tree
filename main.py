@@ -84,6 +84,8 @@ def learn_tree():
             #decision matrix
         
             print(confusion_matrix(y_test, y_pred))
+        
+            return training_list
     
         elif(choice == "2"):
             
@@ -126,6 +128,8 @@ def learn_tree():
                 joblib.dump(c, 'tree.joblib')
     
                 print("Tree saved as 'tree.joblib'")
+            
+                return training_list
                     
             else:
             
@@ -137,7 +141,7 @@ def learn_tree():
         else:
             continue
 
-def test_accuracy():
+def test_accuracy(training_list):
     
     tree = joblib.load('tree.joblib')
     
@@ -154,8 +158,6 @@ def test_accuracy():
     tree = joblib.load('tree.joblib')
 
     train, test = train_test_split(data, test_size = .50)
-
-    testing_list = data.columns
 
     X_test = test[training_list]
     y_test = test["target"]
@@ -202,23 +204,34 @@ def apply_tree():
 
                         data_columns = data.columns
                         
-                        len(data_columns) #This will give us number of columns
+                        for i in data_columns: #This will give us number of columns
+                            
+                            column_input = input("Please input your value for " + str(data_columns[i]) + ": ")
+                        
+                            row.append(column_input)
+                        
+                        print(row)
+                        
                         
                         #apply this to help with our problem
                         #df2 = pd.DataFrame([[5, 6], [7, 8]], columns=list('AB'))
                         
                         #loop to input each column item using length
                             
-                        value = input("")
+                        #value = input("")
                     
                         #add new record here
                     
                         #input("Please enter new values for 'column name', q to quit: ")
+                        
+                
                     
 
                 
             except:
                 print("File not found...")
+
+    #data.to_csv('updated_data.csv')
 
     #once finished, save csv file with new additions
 
@@ -245,9 +258,9 @@ def load_model():
 def select_option(choice):
     
     if(choice == "1"):
-        learn_tree()
+        training_list = learn_tree()
     elif(choice == "2"):
-        test_accuracy()
+        test_accuracy(training_list)
     elif(choice == "3"):
         apply_tree()
     elif(choice == "4"):
@@ -260,6 +273,8 @@ def select_option(choice):
 
 running = True
 
+training_list = []
+
 while(running):
 
     print("----------------MAIN MENU------------------")
@@ -271,6 +286,20 @@ while(running):
 
     choice = input("Please enter 1-5 to select operation: ")
 
-    select_option(choice)
+    if(choice == "1"):
+        training_list = learn_tree()
+    elif(choice == "2"):
+        test_accuracy(training_list)
+    elif(choice == "3"):
+        apply_tree()
+    elif(choice == "4"):
+        load_model()
+    elif(choice == "5" or choice == "q"):
+        print("Aborting..")
+        exit()
+    else:
+        print("invalid input")
+
+#select_option(choice)
 
 
