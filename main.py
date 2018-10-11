@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
 
-#---------------------------------------------
+#-------------------OPTION 1--------------------------
 
 def learn_tree():
     
@@ -29,7 +29,12 @@ def learn_tree():
         if(choice == "1"):
         
             file_name = input("Enter the filename of the dataset: ")
-            data = pd.read_csv(file_name)
+            
+            try:
+                data = pd.read_csv(file_name)
+            except:
+                print("File not found..")
+                return
                 
             attribute_list = data.columns
             
@@ -143,7 +148,7 @@ def learn_tree():
         else:
             continue
 
-#---------------------------------------------
+#-----------------OPTION 2----------------------------
 
 def test_accuracy(training_list):
     
@@ -178,48 +183,58 @@ def test_accuracy(training_list):
         
     print(confusion_matrix(y_test, y_pred))
 
-#---------------------------------------------
+#-------------------OPTION 3--------------------------
 
-def apply_tree():
+def apply_tree(training_list):
     
     #tree = joblib.load('tree.joblib')
     
     print("-------------SUBMENU 3---------------")
     
+    df = pd.DataFrame(columns=training_list)
+    
     while(True):
         
-        file_name = input("Please enter the filename of the data you would like to add new cases to, enter 'q' to quit: ")
+        #file_name = input("Please enter the filename of the data you would like to add new cases to, enter 'q' to quit: ")
         
-        if(file_name == 'q'):
+        #df = pd.DataFrame(columns=training_list)
+        
+        choice = input("Please enter 1 to add new case, 2 to quit: ")
+        
+        if(choice == 'q' or choice == "2"):
             break
         
         else:
-            try:
+            '''try:
                 data = pd.read_csv(file_name, sep=",", index_col=0)
-                
-                while(True):
-                
-                    if(input == "q"):
-                    
-                        break
+            except:
+                print("File not found")
+                return'''
             
-                    else:
+            print("You will now be directed to enter a value for each column..")
+            
+            row = []
                         
-                        row = []
-
-                        data_columns = data.columns
-                        
-                        for i in data_columns: #This will give us number of columns
+            for i in range(len(training_list)): #This will give us number of columns
+                
+                print("Please input your value for",training_list[i],": ")
                             
-                            column_input = input("Please input your value for " + str(data_columns[i]) + ": ")
+                #column_input = input("")
+                column_input = .4
                         
-                            row.append(column_input)
+                row.append(float(column_input))
                         
-                        print(row)
-                        
-                        
-                        #apply this to help with our problem
-                        #df2 = pd.DataFrame([[5, 6], [7, 8]], columns=list('AB'))
+                        #print(row)
+
+            #apply this to help with our problem
+            
+            #df.append(row, ignore_index=True)
+            
+            df2 = pd.DataFrame([row], columns=training_list)
+            
+            df = pd.concat([df, df2], axis=0, ignore_index=True)
+
+            print(df)
                         
                         #loop to input each column item using length
                             
@@ -229,18 +244,13 @@ def apply_tree():
                     
                         #input("Please enter new values for 'column name', q to quit: ")
                         
-                
-                    
 
-                
-            except:
-                print("File not found...")
 
-    #data.to_csv('updated_data.csv')
+    df.to_csv('updated_data.csv')
 
     #once finished, save csv file with new additions
 
-#---------------------------------------------
+#----------------------OPTION 4-----------------------
 
 def load_model():
     
@@ -259,6 +269,8 @@ def load_model():
     data = pd.read_csv("updated_data.csv", sep=",", index_col=0)
 
     #test tree with new cases
+
+    print(data)
 
     #output accuracy and confusion matrix
 
@@ -292,7 +304,7 @@ while(running):
             print("You must execute option 1 first..")
     elif(choice == "3"):
         if(tree_created):
-            apply_tree()
+            apply_tree(training_list)
             new_cases_created = True
         else:
             print("You must execute option 1 first..")
