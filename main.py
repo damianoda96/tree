@@ -41,7 +41,7 @@ def learn_tree():
             # UNCOMMENT BEFORE SUBMITION
             '''while(True):
                     
-                attribute = input("Please input the names of the attributes you would like to train with, q to quit: ")
+                attribute = input("Please input the label names of the columns you would like to train with, q to quit: ")
 
                 if (attribute in attribute_list and attribute not in training_list):
                     training_list.append(attribute)
@@ -93,7 +93,7 @@ def learn_tree():
             
             while(True):
 
-                file_name = input("Please input the names of the attributes you would like to train with, q to quit: ")
+                file_name = input("Please input the file names of the attributes you would like to train with, q to quit: ")
                 
                 if(file_name == "q"):
                     break
@@ -174,44 +174,69 @@ def test_accuracy():
 
 def apply_tree():
     
-    tree = joblib.load('tree.joblib')
+    #tree = joblib.load('tree.joblib')
     
     print("-------------SUBMENU 3---------------")
     
     while(True):
         
-        attribute = input("Please enter the label which you would like to add new cases to test with, enter 'q' to quit: ")
-
+        file_name = input("Please enter the filename of the data you would like to add new cases to, enter 'q' to quit: ")
+        
         if(input == "q"):
-
             break
-
+        
         else:
-            
-            
-            #verify and choose pick specific column
-            
-            while(True):
+        
+            try:
+                data = pd.read_csv(file_name, sep=",", index_col=0)
                 
-                attribute = input("Please enter new values for 'column name', q to quit: ")
+                while(True):
+                
+                    if(input == "q"):
+                    
+                        break
             
-                if(input == "q"):
-            
-                    break
-        
-                else:
-        
-                    #add values to column
+                    else:
+                        
+                        row = []
 
-                    continue
+                        data_columns = data.columns
+                        
+                        len(data_columns) #This will give us number of columns
+                        
+                        #apply this to help with our problem
+                        #df2 = pd.DataFrame([[5, 6], [7, 8]], columns=list('AB'))
+                        
+                        #loop to input each column item using length
+                            
+                        value = input("")
+                    
+                        #add new record here
+                    
+                        #input("Please enter new values for 'column name', q to quit: ")
+                    
+
+                
+            except:
+                print("File not found...")
 
     #once finished, save csv file with new additions
 
 def load_model():
     
     print("-------------SUBMENU 4---------------")
+    
+    tree_file = input("Please enter the filename of the tree: ")
+    
+    try:
+        tree = joblib.load(tree_file)
+    except:
+        print("File not found...")
+        return
 
-    tree = joblib.load('tree.joblib')
+    #load updated csv
+    
+    data = pd.read_csv("updated_data.csv", sep=",", index_col=0)
 
     #test tree with new cases
 
@@ -232,7 +257,6 @@ def select_option(choice):
         exit()
     else:
         print("invalid input")
-
 
 running = True
 
