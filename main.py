@@ -12,6 +12,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
 
+#---------------------------------------------
+
 def learn_tree():
     
     running = True
@@ -141,6 +143,8 @@ def learn_tree():
         else:
             continue
 
+#---------------------------------------------
+
 def test_accuracy(training_list):
     
     tree = joblib.load('tree.joblib')
@@ -174,6 +178,8 @@ def test_accuracy(training_list):
         
     print(confusion_matrix(y_test, y_pred))
 
+#---------------------------------------------
+
 def apply_tree():
     
     #tree = joblib.load('tree.joblib')
@@ -184,11 +190,10 @@ def apply_tree():
         
         file_name = input("Please enter the filename of the data you would like to add new cases to, enter 'q' to quit: ")
         
-        if(input == "q"):
+        if(file_name == 'q'):
             break
         
         else:
-        
             try:
                 data = pd.read_csv(file_name, sep=",", index_col=0)
                 
@@ -235,6 +240,8 @@ def apply_tree():
 
     #once finished, save csv file with new additions
 
+#---------------------------------------------
+
 def load_model():
     
     print("-------------SUBMENU 4---------------")
@@ -255,25 +262,14 @@ def load_model():
 
     #output accuracy and confusion matrix
 
-def select_option(choice):
-    
-    if(choice == "1"):
-        training_list = learn_tree()
-    elif(choice == "2"):
-        test_accuracy(training_list)
-    elif(choice == "3"):
-        apply_tree()
-    elif(choice == "4"):
-        load_model()
-    elif(choice == "5" or choice == "q"):
-        print("Aborting..")
-        exit()
-    else:
-        print("invalid input")
+#---------------------------------------------
 
 running = True
 
 training_list = []
+
+tree_created = False
+new_cases_created = False
 
 while(running):
 
@@ -288,18 +284,27 @@ while(running):
 
     if(choice == "1"):
         training_list = learn_tree()
+        tree_created = True
     elif(choice == "2"):
-        test_accuracy(training_list)
+        if(tree_created):
+            test_accuracy(training_list)
+        else:
+            print("You must execute option 1 first..")
     elif(choice == "3"):
-        apply_tree()
+        if(tree_created):
+            apply_tree()
+            new_cases_created = True
+        else:
+            print("You must execute option 1 first..")
     elif(choice == "4"):
-        load_model()
+        if(new_cases_created):
+            load_model()
+        else:
+            print("You must execute option 3 first..")
     elif(choice == "5" or choice == "q"):
         print("Aborting..")
         exit()
     else:
         print("invalid input")
-
-#select_option(choice)
 
 
