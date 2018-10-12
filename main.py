@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import pandas as pd
 import graphviz
+import random
 from sklearn import tree
 from sklearn import datasets
 from sklearn import svm
@@ -164,7 +165,7 @@ def test_accuracy(training_list):
         print("File not found...")
         return
 
-    tree = joblib.load('tree.joblib')
+    #tree = joblib.load('tree.joblib')
 
     train, test = train_test_split(data, test_size = .50)
 
@@ -190,6 +191,10 @@ def apply_tree(training_list):
     #tree = joblib.load('tree.joblib')
     
     print("-------------SUBMENU 3---------------")
+    
+    #change this to just add records to the original data.csv, then export a copy ############
+    
+    training_list.append("target")
     
     df = pd.DataFrame(columns=training_list)
     
@@ -218,9 +223,12 @@ def apply_tree(training_list):
             for i in range(len(training_list)): #This will give us number of columns
                 
                 print("Please input your value for",training_list[i],": ")
-                            
-                #column_input = input("")
-                column_input = .4
+                
+                if(training_list[i] == "target"):
+                    column_input = random.randint(0,1)
+                else:
+                    #column_input = input("")
+                    column_input = random.random()
                         
                 row.append(float(column_input))
                         
@@ -235,20 +243,10 @@ def apply_tree(training_list):
             df = pd.concat([df, df2], axis=0, ignore_index=True)
 
             print(df)
-                        
-                        #loop to input each column item using length
-                            
-                        #value = input("")
-                    
-                        #add new record here
-                    
-                        #input("Please enter new values for 'column name', q to quit: ")
-                        
-
-
-    df.to_csv('updated_data.csv')
 
     #once finished, save csv file with new additions
+                
+    df.to_csv('updated_data.csv')
 
 #----------------------OPTION 4-----------------------
 
@@ -268,11 +266,28 @@ def load_model():
     
     data = pd.read_csv("updated_data.csv", sep=",", index_col=0)
 
+    training_list.pop()
+
+    print(training_list)
+
     #test tree with new cases
 
-    print(data)
+    train, test = train_test_split(data, test_size = .15)
 
-    #output accuracy and confusion matrix
+    X_test = test[training_list]
+    y_test = test["target"]
+
+    #accuracy
+
+    y_pred = tree.predict(X_test)
+    
+    score = accuracy_score(y_test, y_pred) * 100
+    
+    print("Accuracy: ", score)
+    
+    #confusion matrix
+    
+    print(confusion_matrix(y_test, y_pred))
 
 #---------------------------------------------
 
