@@ -40,14 +40,16 @@ def learn_tree():
             attribute_list = data.columns
             
             ## EMPTY THIS BEFORE SUBMITION
-            training_list = ["danceability", "loudness", "valence", "energy", "instrumentalness", "acousticness", "key", "speechiness", "duration_ms"]
+            #training_list = ["danceability", "loudness", "valence", "energy", "instrumentalness", "acousticness", "key", "speechiness", "duration_ms"]
+            
+            training_list = []
 
             train, test = train_test_split(data, test_size = .15)
             
             c = tree.DecisionTreeClassifier(min_samples_split=100)
 
             # UNCOMMENT BEFORE SUBMITION
-            '''while(True):
+            while(True):
                     
                 attribute = input("Please input the label names of the columns you would like to train with, q to quit: ")
 
@@ -58,8 +60,8 @@ def learn_tree():
                     break
                                     
                 else:
-                    print("This is not an attribut of the inputed")
-                    continue'''
+                    print("This is not an attribute of the inputed file..")
+                    continue
             
             # FOR NOW, USE PRESET
                         
@@ -83,15 +85,15 @@ def learn_tree():
             
             #accuracy
             
-            y_pred = c.predict(X_test)
+            #y_pred = c.predict(X_test)
     
-            score = accuracy_score(y_test, y_pred) * 100
+            #score = accuracy_score(y_test, y_pred) * 100
     
-            print("Accuracy: ", score)
+            #print("Accuracy: ", score)
             
             #decision matrix
         
-            print(confusion_matrix(y_test, y_pred))
+            #print(confusion_matrix(y_test, y_pred))
         
             return training_list
     
@@ -191,8 +193,6 @@ def apply_tree(training_list):
     #tree = joblib.load('tree.joblib')
     
     print("-------------SUBMENU 3---------------")
-    
-    #change this to just add records to the original data.csv, then export a copy ############
     
     training_list.append("target")
     
